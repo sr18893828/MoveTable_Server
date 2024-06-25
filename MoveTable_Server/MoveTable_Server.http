@@ -1,0 +1,6 @@
+@MoveTable_Server_HostAddress = http://localhost:5031
+
+GET {{MoveTable_Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
