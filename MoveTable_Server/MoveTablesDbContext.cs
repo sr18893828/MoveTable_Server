@@ -3,7 +3,7 @@ using MoveTable_Server.Models.User;
 
 namespace MoveTable_Server
 {
-    internal class MoveTablesDbContext : DbContext
+    public class MoveTablesDbContext : DbContext
     {
         // 建構函式
         public MoveTablesDbContext(DbContextOptions<MoveTablesDbContext> options)
