@@ -11,7 +11,7 @@ using MoveTable_Server;
 namespace MoveTable_Server.Migrations
 {
     [DbContext(typeof(MoveTablesDbContext))]
-    [Migration("20240625073945_InitialDB")]
+    [Migration("20240626080135_InitialDB")]
     partial class InitialDB
     {
         /// <inheritdoc />
@@ -30,7 +30,7 @@ namespace MoveTable_Server.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleId"), 10000L);
 
                     b.Property<string>("RoleName")
                         .IsRequired()
@@ -48,7 +48,7 @@ namespace MoveTable_Server.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"), 10000L);
 
                     b.Property<string>("Account")
                         .IsRequired()

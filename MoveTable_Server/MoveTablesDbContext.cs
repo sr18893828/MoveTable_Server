@@ -3,7 +3,7 @@ using MoveTable_Server.Models.User;
 
 namespace MoveTable_Server
 {
-    internal class MoveTablesDbContext : DbContext
+    public class MoveTablesDbContext : DbContext
     {
         // 建構函式
         public MoveTablesDbContext(DbContextOptions<MoveTablesDbContext> options)
@@ -22,7 +22,11 @@ namespace MoveTable_Server
             modelBuilder.Entity<User>(entity =>
             {
                 // 設定主鍵
-                entity.HasKey(e => e.UserId);
+                // ValueGeneratedOnAdd 插入新的實體時，值自動生成
+                // UseIdentityColumn(10000, 1) 識別碼起始值和增量
+                entity.Property(e => e.UserId)
+                    .ValueGeneratedOnAdd()
+                    .UseIdentityColumn(10000, 1);
 
                 // 設定外鍵關係
                 entity.HasOne(e => e.Role)
@@ -36,7 +40,11 @@ namespace MoveTable_Server
             modelBuilder.Entity<Role>(entity =>
             {
                 // 設定主鍵
-                entity.HasKey(e => e.RoleId);
+                // ValueGeneratedOnAdd 插入新的實體時，值自動生成
+                // UseIdentityColumn(10000, 1) 識別碼起始值和增量
+                entity.Property(e => e.RoleId)
+                    .ValueGeneratedOnAdd()
+                    .UseIdentityColumn(10000, 1);
             });
         }
 

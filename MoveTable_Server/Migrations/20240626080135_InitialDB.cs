@@ -15,7 +15,7 @@ namespace MoveTable_Server.Migrations
                 columns: table => new
                 {
                     RoleId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("SqlServer:Identity", "10000, 1"),
                     RoleName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
@@ -28,7 +28,7 @@ namespace MoveTable_Server.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("SqlServer:Identity", "10000, 1"),
                     RoleId = table.Column<int>(type: "int", nullable: false),
                     Account = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
