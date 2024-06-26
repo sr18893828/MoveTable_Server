@@ -27,7 +27,7 @@ namespace MoveTable_Server.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleId"), 10000L);
 
                     b.Property<string>("RoleName")
                         .IsRequired()
@@ -45,7 +45,7 @@ namespace MoveTable_Server.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"), 10000L);
 
                     b.Property<string>("Account")
                         .IsRequired()
