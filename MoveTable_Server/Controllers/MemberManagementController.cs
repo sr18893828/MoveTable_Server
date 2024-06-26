@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MoveTable_Server.Models.User;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 
 
@@ -25,7 +26,7 @@ namespace MoveTable_Server.Controllers
         }
 
         #region User Data
-        [HttpGet("GetUserData")]
+        [HttpGet("Get UserData")]
         public IEnumerable<object> GetUserData()
         {
             var result = _context.Users.Join(_context.Roles, u => u.RoleId, r => r.RoleId, (u, r) => new
@@ -44,7 +45,7 @@ namespace MoveTable_Server.Controllers
 
 
         #region Role Data
-        [HttpGet("GetRoleData")]
+        [HttpGet("Get RoleData")]
         public IEnumerable<object> GetRoleData()
         {
             var result = _context.Roles.Select(r => new
@@ -107,7 +108,7 @@ namespace MoveTable_Server.Controllers
             [MaxLength(100)]
             public string? Email { get; set; }
 
-            public bool Gender { get; set; } = true;
+            public bool? Gender { get; set; } = true;
 
             [MaxLength(10)]
             [RegularExpression(@"^09\d{8}$", ErrorMessage = "手機號碼必須以09開頭並且是10位數字")]
@@ -151,7 +152,7 @@ namespace MoveTable_Server.Controllers
                     Password = HashPassword(data.Password),
                     Name = data.Name,
                     Email = data.Email,
-                    Gender = data.Gender,
+                    Gender = data.Gender ?? true,
                     Phone = data.Phone,
                     Photo = photoPath,
                     RoleId = 10001
@@ -184,7 +185,12 @@ namespace MoveTable_Server.Controllers
         #region Password Encryption
         private string HashPassword(string password)
         {
-            throw new NotImplementedException();
+            using (var sha256 = System.Security.Cryptography.SHA256.Create())
+            {
+                var bytes = Encoding.UTF8.GetBytes(password);
+                var hash = sha256.ComputeHash(bytes);
+                return Convert.ToBase64String(hash);
+            }
         }
         #endregion
 

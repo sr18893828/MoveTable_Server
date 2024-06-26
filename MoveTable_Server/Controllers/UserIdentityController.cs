@@ -11,9 +11,13 @@ namespace MoveTable_Server.Controllers
     public class UserIdentityController : ControllerBase
     {
         private MoveTablesDbContext _context;
-        public UserIdentityController(MoveTablesDbContext context)
+
+        public IConfiguration _configuration; //引用JWT
+
+        public UserIdentityController(MoveTablesDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
     }
 }
