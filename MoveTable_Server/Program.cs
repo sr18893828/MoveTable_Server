@@ -46,12 +46,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 });
 
-//API都要受到登入的限制
-//builder.Services.AddMvc(options =>
-//{
-//    options.Filters.Add(new AuthorizeFilter());
-//});
-
 #endregion
 
 // DataBase Connection String
