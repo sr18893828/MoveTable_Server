@@ -182,6 +182,100 @@ namespace MoveTable_Server.Controllers
         #endregion
 
 
+        #region Check Roles
+        [HttpGet("Check Role Exists")]
+        public async Task<IActionResult> CheckRoleExists([FromQuery]string role)
+        {
+            bool exists = await _context.Roles.AnyAsync(u => u.RoleName == role);
+                return Ok(exists);  // 返回 false 表示 Role  已存在，true 表示 Role 不存在
+        }
+        #endregion
+
+
+        #region Create User 結合確認帳戶是否存在
+        [HttpPost("Create User")]
+        public async Task<IActionResult> CreateUser([FromForm] CreateMemberViewModels data)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Check if account already exists
+            bool accountExists = await _context.Users.AnyAsync(u => u.Account == data.Account);
+            if (accountExists)
+            {
+                return BadRequest(new { success = false, message = "此帳號已經被使用，請更換帳號" });
+            }
+
+            try
+            {
+                string photoPath = "default.jpg"; // Default photo
+                var photoFile = data.Photo;
+                if (photoFile != null && photoFile.Length > 0)
+                {
+                    string filename = Guid.NewGuid().ToString() + Path.GetExtension(photoFile.FileName);
+                    string uploadfolder = Path.Combine(_webHost.WebRootPath, "images/headshots");
+                    string filepath = Path.Combine(uploadfolder, filename);
+
+                    using (var fileStream = new FileStream(filepath, FileMode.Create))
+                    {
+                        await photoFile.CopyToAsync(fileStream);
+                    }
+                    photoPath = filepath;
+                }
+
+                _context.Users.Add(new User
+                {
+                    Account = data.Account,
+                    Password = HashPassword(data.Password),
+                    Name = data.Name,
+                    Email = data.Email,
+                    Gender = data.Gender ?? true,
+                    Phone = data.Phone,
+                    Photo = photoPath,
+                    RoleId = 10001
+
+                });
+
+                await _context.SaveChangesAsync();
+
+                return Ok(new { success = true, message = "會員新增成功" });
+            }
+            catch (Exception ex)
+            {
+                var innerMessage = ex.InnerException != null ? ex.InnerException.Message : "No inner exception";
+                return StatusCode(StatusCodes.Status500InternalServerError, new { success = false, message = ex.Message, innerException = innerMessage });
+            }
+        }
+        #endregion
+
+
+        #region Create Role 結合確認Roles是否存在
+        [HttpPost("Create Roles Check")]
+        public async Task<IActionResult> CreateRoles([FromForm] CreateRoleViewModels data)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Check if role already exists
+            bool roleExists = await _context.Roles.AnyAsync(u => u.RoleName == data.RoleName);
+            if (roleExists)
+            {
+                return BadRequest(new { success = false, message = "此權限已經被使用，請更換權限" });
+            }
+
+            var newRole = new Role { RoleName = data.RoleName };
+            _context.Roles.Add(newRole);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { success = true, message = "權限新增成功" });
+        }
+        #endregion
+
+
         #region Password Encryption
         private string HashPassword(string password)
         {
